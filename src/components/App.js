@@ -97,6 +97,8 @@ function App() {
         }
     }, [history])
 
+
+
     function handleEditAvatarClick() {
         setIsEditAvatarPopupOpen(true)
     }
@@ -171,9 +173,8 @@ function App() {
         history.push('sign-in')
     }
 
-    function registration(email, password) {
-        console.log({email, password})
-        Auth.register(email, password)
+    function registration({email, password}) {
+        Auth.register({email, password})
             .then((res) => {
                 if (res.status === 201) {
                     handleInfoTooltipContent({iconPath: registrationOk, text: 'Вы успешно зарегестрировались!'})

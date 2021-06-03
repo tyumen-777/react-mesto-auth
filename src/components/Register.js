@@ -20,7 +20,7 @@ function Register({registration}) {
         const email = valueEmail;
         const password = valuePassword;
 
-        registration(email,password)
+        registration({email,password})
     }
 
     return (
