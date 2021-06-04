@@ -98,7 +98,6 @@ function App() {
     }, [history])
 
 
-
     function handleEditAvatarClick() {
         setIsEditAvatarPopupOpen(true)
     }
@@ -170,11 +169,11 @@ function App() {
         setLoggedIn(false);
         localStorage.removeItem('jwt');
         setEmail('')
-        history.push('sign-in')
+        history.push('/sign-in')
     }
 
     function registration({email, password}) {
-        Auth.register({email, password})
+        Auth.register(email, password)
             .then((res) => {
                 if (res.status === 201) {
                     handleInfoTooltipContent({iconPath: registrationOk, text: 'Вы успешно зарегестрировались!'})
@@ -184,6 +183,7 @@ function App() {
                 }
                 if (res.status === 400) {
                     console.log('Введеный email уже зарегестрирован!')
+
                 }
             }).catch((err) => {
             handleInfoTooltipContent({iconPath: registrationWrong, text: 'Что-то пошло не так! Попробуйте еще раз!'})
@@ -193,6 +193,7 @@ function App() {
         })
     }
 
+
     function authorization({email, password}) {
         console.log({email, password})
         Auth.authorize({email, password})
@@ -201,7 +202,7 @@ function App() {
                     throw new Error('Произошла ошибка')
                 }
                 Auth.getContent(data)
-                    .then((res)=> {
+                    .then((res) => {
                         setEmail(res.data.email);
                     })
                     .catch(err => console.log(err))
@@ -210,7 +211,7 @@ function App() {
                 handleInfoTooltipOpen();
                 setTimeout(history.push, 3000, '/');
                 setTimeout(closeAllPopups, 2500);
-        }).catch((err) => {
+            }).catch((err) => {
             handleInfoTooltipContent({iconPath: registrationWrong, text: 'Что-то пошло не так! Попробуйте еще раз!'})
             handleInfoTooltipOpen();
             console.log(err)
