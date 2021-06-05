@@ -18,7 +18,7 @@ import Login from "./Login";
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
-import * as Auth from '../utils/auth';
+import * as auth from '../utils/auth';
 
 
 function App() {
@@ -87,7 +87,7 @@ function App() {
     React.useEffect(() => {
         const jwt = localStorage.getItem('jwt');
         if (jwt) {
-            Auth.getContent(jwt)
+            auth.getContent(jwt)
                 .then((res) => {
                     setLoggedIn(true);
                     setEmail(res.data.email);
@@ -173,7 +173,7 @@ function App() {
     }
 
     function registration({email, password}) {
-        Auth.register(email, password)
+        auth.register(email, password)
             .then((res) => {
                 if (res.status === 201) {
                     handleInfoTooltipContent({iconPath: registrationOk, text: 'Вы успешно зарегестрировались!'})
@@ -183,6 +183,12 @@ function App() {
                 }
                 if (res.status === 400) {
                     console.log('Введеный email уже зарегестрирован!')
+                    handleInfoTooltipContent({
+                        iconPath: registrationWrong,
+                        text: 'Введеный email уже зарегестрирован!'
+                    })
+                    handleInfoTooltipOpen();
+                    setTimeout(closeAllPopups, 2500);
 
                 }
             }).catch((err) => {
@@ -195,17 +201,16 @@ function App() {
 
 
     function authorization({email, password}) {
-        console.log({email, password})
-        Auth.authorize({email, password})
+        auth.authorize({email, password})
             .then((data) => {
                 if (!data) {
                     throw new Error('Произошла ошибка')
                 }
-                Auth.getContent(data)
-                    .then((res) => {
-                        setEmail(res.data.email);
-                    })
-                    .catch(err => console.log(err))
+                // auth.getContent(data)
+                //     .then((res) => {
+                //         setEmail(res.data.email);
+                //     })
+                //     .catch(err => console.log(err))
                 setLoggedIn(true);
                 handleInfoTooltipContent({iconPath: registrationOk, text: 'Вы успешны авторизованы!'});
                 handleInfoTooltipOpen();
@@ -214,6 +219,7 @@ function App() {
             }).catch((err) => {
             handleInfoTooltipContent({iconPath: registrationWrong, text: 'Что-то пошло не так! Попробуйте еще раз!'})
             handleInfoTooltipOpen();
+            setTimeout(closeAllPopups, 2500)
             console.log(err)
         })
     }
@@ -235,11 +241,12 @@ function App() {
                                 registration={registration}
                             />
                         </Route>
-                        <ProtectedRoute path="/" component={Main} onEditProfile={handleEditProfileClick}
-                                        onAddPlace={handleAddPlaceClick}
-                                        onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}
-                                        onCardLike={handleCardLike} cards={cards}
-                                        onCardDelete={handleCardDelete} loggedIn={loggedIn}>
+                        <ProtectedRoute
+                            exact path="/" component={Main} onEditProfile={handleEditProfileClick}
+                            onAddPlace={handleAddPlaceClick}
+                            onEditAvatar={handleEditAvatarClick} onCardClick={handleCardClick}
+                            onCardLike={handleCardLike} cards={cards}
+                            onCardDelete={handleCardDelete} loggedIn={loggedIn}>
                             {/*<Main />*/}
                         </ProtectedRoute>
 

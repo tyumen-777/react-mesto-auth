@@ -31,11 +31,13 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
             onClose={onClose}
             handleSubmit={handleSubmit}>
             <input type="text" className="popup__field " id="form-title-input" name="name"
+                   value={name || ''}
                    placeholder="Название"
                    required
                    minLength="2" maxLength="30" onChange={handleChangeName}/>
             <span className="form-title-input-error"> </span>
             <input type="url" className="popup__field popup__field_link" id="form-link-input" name="link"
+                   value={link || ''}
                    placeholder="Ссылка на картинку" required onChange={handleChangeLink}/>
             <span className="form-link-input-error"> </span>
         </PopupWithForm>
